@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>dragoneater67's online esolang interpreters</title>
+    <style>
+      * {
+        font-family: sans-serif;
+        border: none;
+        border-radius: 5px;
+      }
+      body {
+        background-color: #303446;
+        color: #c6d0f5;
+      }
+      .clickable {
+        background-color: #a6d189;
+        color: #232634;
+        cursor: pointer;
+      }
+      .code-block {
+        background-color: #414559;
+        color: #c6d0f5;
+        width: 100%;
+        font-family: monospace;
+        white-space: pre-wrap;
+        tab-size: 2;
+        -moz-tab-size: 2;
+      }
+      .code-block:active, .code-block:focus, .code-block:focus-visible {
+        outline: none;
+        border: 2px solid #a6d189;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>dragoneater67's online esolang interpreters</h1>
+    <form action="/#result" method="POST">
+      <label for="lang">Choose you esolang:</label>
+      <select id="lang" name="lang" class="clickable">
+        <option value="hq9plus" {{if eq .lang "hq9plus"}}selected{{end}}>HQ9+</option>
+        <option value="brainfuck" {{if eq .lang "brainfuck"}}selected{{end}}>Brainfuck</option>
+        <option value="deadfish" {{if eq .lang "deadfish"}}selected{{end}}>Deadfish</option>
+      </select><br>
+      <label for="code">Enter your code here:</label><br>
+      <textarea id="code" name="code" rows="25" cols="80" class="code-block" wrap="off" spellcheck="false">{{.code}}</textarea><br>
+      <label for="input">Enter your input here:</label><br>
+      <textarea id="input" name="input" rows="25" cols="80" class="code-block" wrap="off" spellcheck="false">{{.input}}</textarea><br>
+      <input type="submit" value="Run code" id="submit" class="clickable" autofocus>
+    </form>
+      <label id="result" for="output">Output:</span><br>
+      <pre class="code-block" id="output"><code class="code-block">{{.output}}</code></pre>
+  </body>
+</html>
