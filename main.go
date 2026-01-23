@@ -256,22 +256,20 @@ func main() {
     code := c.PostForm("code")
     input := c.PostForm("input")
     var output string
-    go func() {
-      switch lang {
-      case "hq9plus":
-        output = ExecuteHQ9Plus(code)
-      case "brainfuck":
-        output = ExecuteBrainfuck(code, input)
-      case "deadfish":
-        output = ExecuteDeadfish(code)
-      case "subleq":
-        output = ExecuteSubleq(code)
-      case "rpn":
-        output = ExecuteRPN(code, input)
-      default:
-        output = "Unknown esolang: " + lang
-      }
-    }()
+    switch lang {
+    case "hq9plus":
+      output = ExecuteHQ9Plus(code)
+    case "brainfuck":
+      output = ExecuteBrainfuck(code, input)
+    case "deadfish":
+      output = ExecuteDeadfish(code)
+    case "subleq":
+      output = ExecuteSubleq(code)
+    case "rpn":
+      output = ExecuteRPN(code, input)
+    default:
+      output = "Unknown esolang: " + lang
+    }
     c.HTML(200, "index.html", gin.H{
       "output": output,
       "code": code,
