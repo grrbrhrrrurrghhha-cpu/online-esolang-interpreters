@@ -1,9 +1,9 @@
 package main
 
 import (
-  "time"
   "strconv"
   "strings"
+  "time"
   "github.com/gin-gonic/gin"
 )
 
@@ -267,6 +267,8 @@ func main() {
       output = ExecuteSubleq(code)
     case "rpn":
       output = ExecuteRPN(code, input)
+    case "text":
+      output = code
     default:
       output = "Unknown esolang: " + lang
     }
@@ -282,6 +284,7 @@ func main() {
       "output": "",
       "input": "",
       "code": "",
+      "lang": "brainfuck",
     })
   })
   router.Run(":4269")
