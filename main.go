@@ -3,6 +3,7 @@ package main
 import (
   "time"
   "strconv"
+  "strings"
   "github.com/gin-gonic/gin"
 )
 
@@ -10,7 +11,7 @@ func ExecuteHQ9Plus(code string) string {
   var output string
   var acc, ops int
   start := time.Now()
-  for i := 0; i < len(code); i++ {
+  for _, instruction := range code {
     ops++
     if ops % 1000 == 0 {
       if time.Since(start) > 5 * time.Second {
@@ -18,7 +19,7 @@ func ExecuteHQ9Plus(code string) string {
         return output
       }
     }
-    switch code[i] {
+    switch instruction {
     case 'H':
       output += "Hello, world!\n"
     case 'Q':
@@ -118,7 +119,7 @@ func ExecuteDeadfish(code string) string {
   var output string
   var acc, ops int
   start := time.Now()
-  for i := 0; i < len(code); i++ {
+  for _, instruction := range code {
     ops++
     if ops % 1000 == 0 {
       if time.Since(start) > 5 * time.Second {
@@ -126,7 +127,7 @@ func ExecuteDeadfish(code string) string {
         return output
       }
     }
-    switch code[i] {
+    switch instruction {
     case 'i':
       acc++
       if acc == 256 || acc == -1 {
@@ -149,6 +150,52 @@ func ExecuteDeadfish(code string) string {
   return output
 }
 
+func ExecuteSubleq(code string) string {
+  var ip, ops int
+  var memory []int
+  var output string
+  start := time.Now()
+  fields := strings.Fields(code)
+  for _, field := range fields {
+    num, err := strconv.Atoi(field)
+    if err != nil {
+      continue
+    }
+    memory = append(memory, num)
+  }
+  for ip >= 0 && ip + 2 < len(memory) {
+    ops++
+    if ops % 1000 == 0 {
+      if time.Since(start) > 5 * time.Second {
+        output += "\nTimed out\n"
+        return output
+      }
+    }
+    a := ip
+    b := ip + 1
+    c := ip + 2
+    if a >= len(memory) || a < 0 || b >= len(memory) || b < 0 || c >= len(memory) || c < 0 {
+      break
+    }
+    if memory[a] >= len(memory) || memory[a] < 0 || b >= len(memory) || b < -1 {
+      break
+    }
+    if memory[b] > -1 {
+      memory[memory[b]] = memory[memory[b]] - memory[memory[a]]
+    } else {
+      output += string(byte(memory[memory[a]]))
+      ip += 3
+      continue
+    }
+    if memory[memory[b]] <= 0 {
+      ip = memory[c]
+    } else {
+      ip += 3
+    }
+  }
+  return output
+}
+
 func main() {
   router := gin.Default()
   router.SetTrustedProxies(nil)
@@ -166,6 +213,8 @@ func main() {
       output = ExecuteBrainfuck(code, input)
     case "deadfish":
       output = ExecuteDeadfish(code)
+    case "subleq":
+      output = ExecuteSubleq(code)
     default:
       output = "Unknown esolang: " + lang
     }
