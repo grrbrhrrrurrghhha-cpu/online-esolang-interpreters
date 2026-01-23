@@ -196,6 +196,56 @@ func ExecuteSubleq(code string) string {
   return output
 }
 
+func ExecuteRPN(code string, input string) string {
+  stack := []int{}
+  inputs := []int{}
+  var output string
+  inputFields := strings.Fields(input)
+  for _, in := range inputFields {
+    num, err := strconv.Atoi(in)
+    if err != nil {
+      continue
+    }
+    inputs = append(inputs, num)
+  }
+  fields := strings.Fields(code)
+  for _, field := range fields {
+    num, err := strconv.Atoi(field)
+    if err != nil {
+      if len(stack) > 1 {
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        switch field {
+        case "+":
+          stack = append(stack, a + b)
+        case "-":
+          stack = append(stack, a - b)
+        case "/":
+          stack = append(stack, a / b)
+        case "*":
+          stack = append(stack, a * b)
+        case "%":
+          stack = append(stack, a % b)
+        }
+      }
+      if len(field) > 1 && strings.HasPrefix(field, "$") {
+        index, err := strconv.Atoi(field[1:])
+        if err == nil && index < len(inputs) {
+          stack = append(stack, inputs[index])
+        }
+      }
+      continue
+    }
+    stack = append(stack, num)
+  }
+  if len(stack) > 0 {
+    output = strconv.Itoa(stack[0])
+  }
+  return output
+}
+
 func main() {
   router := gin.Default()
   router.SetTrustedProxies(nil)
@@ -215,6 +265,8 @@ func main() {
       output = ExecuteDeadfish(code)
     case "subleq":
       output = ExecuteSubleq(code)
+    case "rpn":
+      output = ExecuteRPN(code, input)
     default:
       output = "Unknown esolang: " + lang
     }
