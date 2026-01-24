@@ -192,10 +192,10 @@ func ExecuteSubleq(code string, input string) string {
       } else {
         memory[b] = 0
       }
-      ip = c
+      ip += 3
     } else if a >= 0 && b == -1 {
       output += string(byte(memory[a]))
-      ip = c
+      ip += 3
     } else {
       break
     }
