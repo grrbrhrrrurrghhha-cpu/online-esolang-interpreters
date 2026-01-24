@@ -6,19 +6,46 @@
       * {
         font-family: sans-serif;
         border: none;
-        border-radius: 5px;
+        border-radius: 10px;
+      }
+      a {
+        color: #8caaee;
       }
       body {
         background-color: #303446;
         color: #c6d0f5;
       }
+      h1 {
+        background: linear-gradient(to right, #f4b8e4, #ca9ee6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        font-size; 1.5rem;
+        font-weight: 900;
+        margin-top: 16px;
+      }
+      hr {
+        border-top: 1px solid #232634;
+        margin: 20px 0;
+      }
+      label {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
       .clickable {
-        background-color: #a6d189;
+        background: linear-gradient(to right, #a6d189, #81c8be);
+        border-radius: 999px;
         color: #232634;
         cursor: pointer;
+        font-size; 1.3rem;
+        font-weight: 700;
+        padding: 16px 32px;
       }
       .code-block {
-        background-color: #414559;
+        background: #414559;
         color: #c6d0f5;
         width: 100%;
         font-family: monospace;
@@ -27,13 +54,14 @@
         -moz-tab-size: 2;
       }
       .code-block:active, .code-block:focus, .code-block:focus-visible {
+        background: linear-gradient(#414559, #414559) padding-box, linear-gradient(to right, #a6d189, #81c8be) border-box;
         outline: none;
-        border: 2px solid #a6d189;
+        border: 3px solid transparent;
       }
     </style>
   </head>
   <body>
-    <h1>dragoneater67's online esolang interpreters</h1>
+    <header><h1>dragoneater67's online esolang interpreters</h1></header>
     <form action="/#result" method="POST">
       <label for="lang">Choose you esolang:</label>
       <select id="lang" name="lang" class="clickable">
@@ -44,13 +72,14 @@
         <option value="rpn" {{if eq .lang "rpn"}}selected{{end}}>RPN</option>
         <option value="text" {{if eq .lang "text"}}selected{{end}}>Text</option>
       </select><br>
-      <label for="code">Enter your code here:</label><br>
-      <textarea id="code" name="code" rows="25" cols="80" class="code-block" wrap="off" spellcheck="false">{{.code}}</textarea><br>
-      <label for="input">Enter your input here:</label><br>
-      <textarea id="input" name="input" rows="25" cols="80" class="code-block" wrap="off" spellcheck="false">{{.input}}</textarea><br>
-      <input type="submit" value="Run code" id="submit" class="clickable" autofocus>
+      <label for="code">Enter your code here:</label>
+      <textarea id="code" name="code" rows="25" cols="80" class="code-block" wrap="off" spellcheck="false">{{.code}}</textarea>
+      <label for="input">Enter your input here:</label>
+      <textarea id="input" name="input" rows="25" cols="80" class="code-block" wrap="off" spellcheck="false">{{.input}}</textarea>
+      <input type="submit" value="&#9654 Run code" id="submit" class="clickable" autofocus>
     </form>
-      <label id="result" for="output">Output:</span><br>
-      <pre class="code-block" id="output"><code class="code-block">{{.output}}</code></pre>
+    <label id="result" for="output">Output:</span>
+    <pre class="code-block" id="output"><code class="code-block">{{.output}}</code></pre><hr>
+    <footer>get free subdomains on <a href="https://freedns.afraid.org">Free DNS</a></footer>
   </body>
 </html>
