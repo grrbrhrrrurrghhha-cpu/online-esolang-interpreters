@@ -150,18 +150,22 @@ func ExecuteDeadfish(code string) string {
   return output
 }
 
-func ExecuteSubleq(code string) string {
-  var ip, ops int
-  var memory []int
+func ExecuteSubleq(code string, input string) string {
+  var ip, ops, index int
   var output string
+  memory := [30000]int{}
   start := time.Now()
   fields := strings.Fields(code)
-  for _, field := range fields {
+  for i, field := range fields {
     num, err := strconv.Atoi(field)
     if err != nil {
       continue
     }
-    memory = append(memory, num)
+    if i < len(memory) {
+      memory[i] = num
+    } else {
+      break
+    }
   }
   for ip >= 0 && ip + 2 < len(memory) {
     ops++
@@ -171,26 +175,29 @@ func ExecuteSubleq(code string) string {
         return output
       }
     }
-    a := ip
-    b := ip + 1
-    c := ip + 2
-    if a >= len(memory) || a < 0 || b >= len(memory) || b < 0 || c >= len(memory) || c < 0 {
-      break
-    }
-    if memory[a] >= len(memory) || memory[a] < 0 || b >= len(memory) || b < -1 {
-      break
-    }
-    if memory[b] > -1 {
-      memory[memory[b]] = memory[memory[b]] - memory[memory[a]]
+    a := memory[ip]
+    b := memory[ip + 1]
+    c := memory[ip + 2]
+    if a >= 0 && b >= 0 {
+      memory[b] = memory[b] - memory[a]
+      if memory[b] <= 0 {
+        ip = c
+      } else {
+        ip += 3
+      }
+    } else if a == -1 && b >= 0 {
+      if index < len(input) {
+        memory[b] = int(input[index])
+        index++
+      } else {
+        memory[b] = 0
+      }
+      ip = c
+    } else if a >= 0 && b == -1 {
+      output += string(byte(memory[a]))
+      ip = c
     } else {
-      output += string(byte(memory[memory[a]]))
-      ip += 3
-      continue
-    }
-    if memory[memory[b]] <= 0 {
-      ip = memory[c]
-    } else {
-      ip += 3
+      break
     }
   }
   return output
@@ -264,7 +271,7 @@ func main() {
     case "deadfish":
       output = ExecuteDeadfish(code)
     case "subleq":
-      output = ExecuteSubleq(code)
+      output = ExecuteSubleq(code, input)
     case "rpn":
       output = ExecuteRPN(code, input)
     case "text":
