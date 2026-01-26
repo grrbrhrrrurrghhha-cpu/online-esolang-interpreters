@@ -1,6 +1,7 @@
 package main
 
 import (
+  "os"
   "strconv"
   "strings"
   "time"
@@ -254,6 +255,14 @@ func ExecuteRPN(code string, input string) string {
 }
 
 func main() {
+  var count int
+  content, err := os.ReadFile("count")
+  if err == nil {
+    count, err = strconv.Atoi(string(content))
+    if err != nil {
+      count = 0
+    }
+  }
   router := gin.Default()
   router.SetTrustedProxies(nil)
   router.LoadHTMLGlob("templates/*")
@@ -284,14 +293,18 @@ func main() {
       "code": code,
       "input": input,
       "lang": lang,
+      "count": count,
     })
   })
   router.GET("/", func(c *gin.Context) {
+    count++
+    _ = os.WriteFile("count", []byte(strconv.Itoa(count)), 600)
     c.HTML(200, "index.html", gin.H{
       "output": "",
       "input": "",
       "code": "+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.",
       "lang": "brainfuck",
+      "count": count,
     })
   })
   router.Run(":4269")
