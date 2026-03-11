@@ -120,6 +120,77 @@ func ExecuteBrainfuck(code string, input string) string {
   return output
 }
 
+func ExecutePercentCaretAnd78(code string, input string) string {
+  var output string
+  var grid = [256][256]bool{}
+  var index, ops int
+  var x, y uint8
+  start := time.Now()
+  for i := 0; i < len(code); i++ {
+    ops++
+    if ops % 1000 == 0 {
+      if time.Since(start) > 5 * time.Second {
+        output += "\nTimed out\n"
+        return output
+      }
+    }
+    switch code[i] {
+    case '>':
+      x++
+    case '<':
+      x--
+    case 'v':
+      y++
+    case '^':
+      y--
+    case '@':
+      grid[y][x] = !grid[y][x]
+    case '{':
+      if grid[y][x] == 0 {
+        balance := 1
+        for j := i + 1; j < len(code); j++ {
+          switch code[j] {
+          case '{':
+            balance++
+          case '}':
+            balance--
+          }
+          if balance == 0 {
+            i = j
+            break
+          }
+        }
+      }
+    case '}':
+      if grid[y][x] != 0 {
+        balance := 1
+        for j := i - 1; j >= 0; j-- {
+          switch code[j] {
+          case '{':
+            balance--
+          case '}':
+            balance++
+          }
+          if balance == 0 {
+            i = j
+            break
+          }
+        }
+      }
+    }
+  }
+  for i := 0; i < 256; i++ {
+    for j := 0; j < 256; j++ {
+      if grid[i][j] {
+        output += '1'
+      } else {
+        output += '0'
+      }
+    }
+  }
+  return output
+}
+
 func ExecuteDeadfish(code string) string {
   var output string
   var acc, ops int
@@ -265,11 +336,11 @@ func ExecuteCuteCats(code string) string {
       }
     }
     switch c {
-      case '🐱':
-        acc = 2
-      case '🐈':
-        if acc == 2 {
-          output += "4"
+     case '🐱':
+       acc = 2
+     case '🐈':
+       if acc == 2 {
+         output += "4"
         } else {
           output += "31"
         }
@@ -296,16 +367,16 @@ func Execute67machine(code string) string {
     output += "\n"
     c := codeArray[ip]
     switch c {
-      case '6':
-        if codeArray[mod(ip + 1, len(codeArray))] == '6' {
-          codeArray[mod(ip + 1, len(codeArray))] = '7'
-        } else {
-          codeArray[mod(ip + 1, len(codeArray))] = '7'
-        }
-        ip = mod(ip + 7, len(codeArray))
-      case '7':
-        codeArray = append(codeArray, codeArray[mod(ip + 1, len(codeArray))])
-        ip = mod(ip - 6, len(codeArray))
+    case '6':
+      if codeArray[mod(ip + 1, len(codeArray))] == '6' {
+        codeArray[mod(ip + 1, len(codeArray))] = '7'
+      } else {
+        codeArray[mod(ip + 1, len(codeArray))] = '7'
+      }
+      ip = mod(ip + 7, len(codeArray))
+    case '7':
+      codeArray = append(codeArray, codeArray[mod(ip + 1, len(codeArray))])
+      ip = mod(ip - 6, len(codeArray))
     }
   }
 
@@ -347,6 +418,8 @@ func main() {
       output = ExecuteCuteCats(code)
     case "67machine":
       output = Execute67machine(code)
+    case "percentcaretand78":
+      output = ExecutePercentCaretAnd78(code)
     default:
       output = "Unknown esolang: " + lang
     }
