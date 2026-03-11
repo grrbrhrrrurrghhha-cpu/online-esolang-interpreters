@@ -123,7 +123,7 @@ func ExecuteBrainfuck(code string, input string) string {
 func ExecutePercentCaretAnd78(code string) string {
   var output string
   var grid = [256][256]bool{}
-  var index, ops int
+  var ops int
   var x, y uint8
   start := time.Now()
   for i := 0; i < len(code); i++ {
