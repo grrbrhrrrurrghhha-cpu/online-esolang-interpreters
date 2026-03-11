@@ -187,6 +187,7 @@ func ExecutePercentCaretAnd78(code string) string {
         output += "0"
       }
     }
+    output += "\n"
   }
   return output
 }
