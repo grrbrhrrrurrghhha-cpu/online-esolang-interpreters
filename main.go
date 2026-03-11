@@ -8,6 +8,10 @@ import (
   "github.com/gin-gonic/gin"
 )
 
+func mod(a int, b int) int {
+  return ((a % b) + b) % b
+}
+
 func ExecuteHQ9Plus(code string) string {
   var output string
   var acc, ops int
@@ -179,7 +183,7 @@ func ExecuteSubleq(code string, input string) string {
     a := memory[ip]
     b := memory[ip + 1]
     c := memory[ip + 2]
-    if a >= 0 && b >= 0 {
+    if a >= 0 && b >= 0 && a < 30000 && b < 30000 {
       memory[b] = memory[b] - memory[a]
       if memory[b] <= 0 {
         ip = c
@@ -235,7 +239,7 @@ func ExecuteRPN(code string, input string) string {
         case "*":
           stack = append(stack, a * b)
         case "%":
-          stack = append(stack, a % b)
+          stack = append(stack, mod(a, b))
         }
       }
       if len(field) > 1 && strings.HasPrefix(field, "$") {
@@ -251,6 +255,66 @@ func ExecuteRPN(code string, input string) string {
   if len(stack) > 0 {
     output = strconv.Itoa(stack[0])
   }
+  return output
+}
+
+func ExecuteCuteCats(code string) string {
+  var output string
+  var acc, ops int
+  start := time.Now()
+  for _, c := range code {
+    ops++
+    if ops % 1000 == 0 {
+      if time.Since(start) > 5 * time.Second {
+        output += "\nTimed out\n"
+        return output
+      }
+    }
+    switch c {
+      case '🐱':
+        acc = 2
+      case '🐈':
+        if acc == 2 {
+          output += "4"
+        } else {
+          output += "31"
+        }
+    }
+  }
+
+  return output
+}
+
+func Execute67machine(code string) string {
+  var output string
+  var ip, ops int
+  codeArray := []rune(code)
+  start := time.Now()
+  for {
+    ops++
+    if ops % 1000 == 0 {
+      if time.Since(start) > 5 * time.Second {
+        output += "\nTimed out\n"
+        return output
+      }
+    }
+    output += string(codeArray)
+    output += "\n"
+    c := codeArray[ip]
+    switch c {
+      case '6':
+        if codeArray[mod(ip + 1, len(codeArray))] == '6' {
+          codeArray[mod(ip + 1, len(codeArray))] = '7'
+        } else {
+          codeArray[mod(ip + 1, len(codeArray))] = '7'
+        }
+        ip = mod(ip + 7, len(codeArray))
+      case '7':
+        codeArray = append(codeArray, codeArray[mod(ip + 1, len(codeArray))])
+        ip = mod(ip - 6, len(codeArray))
+    }
+  }
+
   return output
 }
 
@@ -285,6 +349,10 @@ func main() {
       output = ExecuteRPN(code, input)
     case "text":
       output = code
+    case "cutecats":
+      output = ExecuteCuteCats(code)
+    case "67machine":
+      output = Execute67machine(code)
     default:
       output = "Unknown esolang: " + lang
     }
