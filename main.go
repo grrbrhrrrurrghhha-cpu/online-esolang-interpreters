@@ -146,7 +146,7 @@ func ExecutePercentCaretAnd78(code string) string {
     case '@':
       grid[y][x] = !grid[y][x]
     case '{':
-      if grid[y][x] == 0 {
+      if !grid[y][x] {
         balance := 1
         for j := i + 1; j < len(code); j++ {
           switch code[j] {
@@ -162,7 +162,7 @@ func ExecutePercentCaretAnd78(code string) string {
         }
       }
     case '}':
-      if grid[y][x] != 0 {
+      if grid[y][x] {
         balance := 1
         for j := i - 1; j >= 0; j-- {
           switch code[j] {
@@ -182,9 +182,9 @@ func ExecutePercentCaretAnd78(code string) string {
   for i := 0; i < 256; i++ {
     for j := 0; j < 256; j++ {
       if grid[i][j] {
-        output += '1'
+        output += "1"
       } else {
-        output += '0'
+        output += "0"
       }
     }
   }
