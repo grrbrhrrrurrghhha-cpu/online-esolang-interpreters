@@ -135,21 +135,15 @@ func ExecuteDeadfish(code string) string {
     switch instruction {
     case 'i':
       acc++
-      if acc == 256 || acc == -1 {
-        acc = 0
-      }
     case 'd':
       acc--
-      if acc == 256 || acc == -1 {
-        acc = 0
-      }
     case 's':
       acc *= acc
-      if acc == 256 || acc == -1 {
-        acc = 0
-      }
     case 'o':
       output += strconv.Itoa(acc)
+    }
+    if acc == 256 || acc == -1 {
+      acc = 0
     }
   }
   return output
