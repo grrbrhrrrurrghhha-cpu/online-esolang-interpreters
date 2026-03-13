@@ -1,6 +1,7 @@
 package main
 
 import (
+  "math/rand"
   "os"
   "strconv"
   "strings"
@@ -384,6 +385,229 @@ func Execute67machine(code string) string {
   return output
 }
 
+func ExecuteBefunge93(code string, input string) string {
+  var output string
+  var index, x, y, dx, dy, ops int
+  var stringMode bool
+  running := true
+  codeGrid := [25][80]rune{}
+  stack := []int{}
+  start := time.Now()
+  
+  for _, c := range code {
+    if c != '\n' {
+      codeGrid[y][x] = c
+      x++
+      if x >= 80 {
+        return "Out of bounds\n"
+      } else {
+        y++
+        x = 0
+        if y >= 25 {
+          return "Out of bounds\n"
+        }
+      }
+    }
+  }
+  x = 0
+  y = 0
+  
+  dx = 1
+  dy = 0
+  for running {
+    ops++
+    if ops % 1000 == 0 {
+      if time.Since(start) > 5 * time.Second {
+        output += "\nTimed out\n"
+        return output
+      }
+    }
+    
+    if stringMode && c != '"' {
+      stack = append(stack, int(c))
+      continue
+    }
+    
+    switch codeGrid[y][x] {
+      case '+':
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        stack = append(stack, a + b)
+      case '-':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if a == 0 {
+          // TODO: add integer input
+        }
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        stack = append(stack, b - a)
+      case '*':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        stack = append(stack, a * b)
+      case '/':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        stack = append(stack, b / a)
+      case '%':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        stack = append(stack, b % a)
+      case '!':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if a == 0 {
+          stack = append(stack, 1)
+        } else {
+          stack = append(stack, 0)
+        }
+      case '`':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if b > a {
+          stack = append(stack, 1)
+        } else {
+          stack = append(stack, 0)
+        }
+      case '>':
+        dx = 1
+        dy = 0
+      case '<':
+        dx = -1
+        dy = 0
+      case '^':
+        dy = -1
+        dx = 0
+      case 'v':
+        dy = 1
+        dx = 0
+      case '?':
+        dir := rand.Intn(4)
+        switch dir {
+          case 0:
+            dx = 1
+            dy = 0
+          case 1:
+            dx = -1
+            dy = 0
+          case 2:
+            dy = -1
+            dx = 0
+          case 3:
+            dy = 1
+            dx = 0
+        }
+      case '_':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if a == 0 {
+          dx = 1
+        } else {
+          dx = -1
+        }
+        dy = 0
+      case '|':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if a == 0 {
+          dy = 1
+        } else {
+          dy = -1
+        }
+        dx = 0
+      case '"':
+        stringMode = !stringMode
+      case ':':
+        a := stack[len(stack) - 1]
+        stack = append(stack, a)
+      case '\\':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        b := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        stack = append(stack, a)
+        stack = append(stack, b)
+      case '$':
+        stack = stack[:len(stack) - 1]
+      case '.':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        output += strconv.Atoi(a)
+      case ',':
+        a := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        output += string(a)
+      case '#':
+        x += dx
+        y += dy
+      case 'g':
+        y := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        x := stack[len(stack) - 1]
+        if x < 80 && x >= 0 && y < 25 && y >= 0 {
+          stack = append(stack, int(codeGrid[y][x]))
+        } else {
+          stack = append(stack, 0)
+        }
+      case 'p':
+        y := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        x := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        v := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if x < 80 && x >= 0 && y < 25 && y >= 0 {
+          codeGrid[y][x] = rune(v)
+        }
+      case '&':
+        // TODO
+      case '~':
+        if index < len(input) {
+          stack = append(stack, int(input[index]))
+          index++
+        }
+      case '@':
+        running = false
+      case '0':
+         stack = append(stack, 0)
+      case '1':
+         stack = append(stack, 1)
+      case '2':
+         stack = append(stack, 2)
+      case '3':
+         stack = append(stack, 3)
+      case '4':
+         stack = append(stack, 4)
+      case '5':
+         stack = append(stack, 5)
+      case '6':
+         stack = append(stack, 6)
+      case '7':
+         stack = append(stack, 7)
+      case '8':
+         stack = append(stack, 8)
+      case '9':
+        stack = append(stack, 9)
+    }
+    
+    x += dx
+    y += dy
+  }
+
+  return output
+}
+
 func main() {
   var count int
   content, err := os.ReadFile("count")
@@ -421,6 +645,8 @@ func main() {
       output = Execute67machine(code)
     case "percentcaretand78":
       output = ExecutePercentCaretAnd78(code)
+    case "befunge93":
+      output = ExecuteBefunge93(code)
     default:
       output = "Unknown esolang: " + lang
     }
