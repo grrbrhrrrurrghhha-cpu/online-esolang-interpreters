@@ -538,7 +538,7 @@ func ExecuteBefunge93(code string, input string) string {
         push(stack, a)
         push(stack, b)
       case '$':
-        _ := pop(stack)
+        pop(stack)
       case '.':
         a := pop(stack)
         output += strconv.Itoa(a)
