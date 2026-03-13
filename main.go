@@ -19,8 +19,8 @@ func push(stack *[]int, a int) {
 
 func pop(stack *[]int) int {
   if len(*stack) > 0 {
-    top := stack[len(*stack) - 1]
-    stack = stack[:len(*stack) - 1]
+    top := *stack[len(*stack) - 1]
+    *stack = *stack[:len(*stack) - 1]
     return top
   } else {
     return 0
