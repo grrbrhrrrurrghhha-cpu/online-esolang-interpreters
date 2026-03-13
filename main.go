@@ -461,7 +461,7 @@ func ExecuteBefunge93(code string, input string) string {
         b := pop(&stack)
         a := pop(&stack)
         if a == 0 {
-          for index < len(input) && input[index] == ' ' && input[index] == '\n' && input[index] == '\r' {
+          for index < len(input) && input[index] == ' ' || input[index] == '\n' || input[index] == '\r' {
             index++
           }
           for index < len(input) && input[index] >= '0' && input[index] <= '9' {
@@ -573,7 +573,7 @@ func ExecuteBefunge93(code string, input string) string {
         }
       case '&':
         n := 0
-        for index < len(input) || input[index] == ' ' || input[index] == '\n' || input[index] == '\r' {
+        for index < len(input) && input[index] == ' ' || input[index] == '\n' || input[index] == '\r' {
           index++
         }
         for index < len(input) && input[index] >= '0' && input[index] <= '9' {
