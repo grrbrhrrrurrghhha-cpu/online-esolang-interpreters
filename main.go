@@ -454,20 +454,20 @@ func ExecuteBefunge93(code string, input string) string {
     
     switch codeGrid[y][x] {
       case '+':
-        b := pop(&stack)
         a := pop(&stack)
+        b := pop(&stack)
         push(&stack, a + b)
       case '-':
-        b := pop(&stack)
         a := pop(&stack)
+        b := pop(&stack)
         push(&stack, b - a)
       case '*':
-        b := pop(&stack)
         a := pop(&stack)
+        b := pop(&stack)
         push(&stack, a * b)
       case '/':
-        b := pop(&stack)
         a := pop(&stack)
+        b := pop(&stack)
         if a == 0 {
           for index < len(input) && (input[index] == ' ' || input[index] == '\n' || input[index] == '\r') {
             index++
@@ -480,8 +480,8 @@ func ExecuteBefunge93(code string, input string) string {
         }
         push(&stack, b / a)
       case '%':
-        b := pop(&stack)
         a := pop(&stack)
+        b := pop(&stack)
         push(&stack, b % a)
       case '!':
         a := pop(&stack)
@@ -491,8 +491,8 @@ func ExecuteBefunge93(code string, input string) string {
           push(&stack, 0)
         }
       case '`':
-        b := pop(&stack)
         a := pop(&stack)
+        b := pop(&stack)
         if b > a {
           push(&stack, 1)
         } else {
