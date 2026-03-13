@@ -565,7 +565,7 @@ func ExecuteBefunge93(code string, input string) string {
         pop(&stack)
       case '.':
         a := pop(&stack)
-        output += strconv.Itoa(a) + " "
+        output += strconv.Itoa(a)
       case ',':
         a := pop(&stack)
         output += string(a)
