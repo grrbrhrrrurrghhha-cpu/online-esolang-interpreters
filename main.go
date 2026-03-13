@@ -13,6 +13,20 @@ func mod(a int, b int) int {
   return ((a % b) + b) % b
 }
 
+func push(stack []int, a int) {
+  stack = append(stack, a)
+}
+
+func pop(stack []int) int {
+  if len(stack) > 0 {
+    top := stack[len(stack) - 1]
+    stack = stack[:len(stack) - 1]
+    return top
+  } else {
+    return 0
+  }
+}
+
 func ExecuteHQ9Plus(code string) string {
   var output string
   var acc, ops int
@@ -425,62 +439,48 @@ func ExecuteBefunge93(code string, input string) string {
     
     if stringMode && codeGrid[y][x] != '"' {
       stack = append(stack, int(codeGrid[y][x]))
-      x += dx
-      y += dy
+      x = (x + dx) % 80
+      y = (y + dy) % 25
       continue
     }
     
     switch codeGrid[y][x] {
       case '+':
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        stack = append(stack, a + b)
+        b := pop(stack)
+        a := pop(stack)
+        push(stack, a + b)
       case '-':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        if a == 0 {
-          // TODO: add integer input
-        }
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        stack = append(stack, b - a)
+        b := pop(stack)
+        a := pop(stack)
+        push(stack, b - a)
       case '*':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        stack = append(stack, a * b)
+        b := pop(stack)
+        a := pop(stack)
+        push(stack, a * b)
       case '/':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        stack = append(stack, b / a)
+        b := pop(stack)
+        a := pop(stack)
+        if a != 0 {
+          push(stack, b / a)
+        }
       case '%':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        stack = append(stack, b % a)
+        b := pop(stack)
+        a := pop(stack)
+        push(stack, b % a)
       case '!':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        a := pop(stack)
         if a == 0 {
-          stack = append(stack, 1)
+          push(stack, 1)
         } else {
-          stack = append(stack, 0)
+          push(stack, 0)
         }
       case '`':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        b := pop(stack)
+        a := pop(stack)
         if b > a {
-          stack = append(stack, 1)
+          push(stack, 1)
         } else {
-          stack = append(stack, 0)
+          push(stack, 0)
         }
       case '>':
         dx = 1
@@ -511,8 +511,7 @@ func ExecuteBefunge93(code string, input string) string {
             dx = 0
         }
       case '_':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        a := pop(stack)
         if a == 0 {
           dx = 1
         } else {
@@ -520,8 +519,7 @@ func ExecuteBefunge93(code string, input string) string {
         }
         dy = 0
       case '|':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        a := pop(stack)
         if a == 0 {
           dy = 1
         } else {
@@ -531,45 +529,37 @@ func ExecuteBefunge93(code string, input string) string {
       case '"':
         stringMode = !stringMode
       case ':':
-        a := stack[len(stack) - 1]
-        stack = append(stack, a)
+        a := pop(stack)
+        push(stack, a)
+        push(stack, a)
       case '\\':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        b := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        stack = append(stack, a)
-        stack = append(stack, b)
+        a := pop(stack)
+        b := pop(stack)
+        push(stack, a)
+        push(stack, b)
       case '$':
-        stack = stack[:len(stack) - 1]
+        _ := pop(stack)
       case '.':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        a := pop(stack)
         output += strconv.Itoa(a)
       case ',':
-        a := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        a := pop(stack)
         output += string(a) + " "
       case '#':
-        x += dx
-        y += dy
+        x = (x + dx) % 80
+        y = (y + dy) % 25
       case 'g':
-        y := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        x := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        y := pop(stack)
+        x := pop(stack)
         if x < 80 && x >= 0 && y < 25 && y >= 0 {
-          stack = append(stack, int(codeGrid[y][x]))
+          push(stack, int(codeGrid[y][x]))
         } else {
-          stack = append(stack, 0)
+          push(stack, 0)
         }
       case 'p':
-        y := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        x := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
-        v := stack[len(stack) - 1]
-        stack = stack[:len(stack) - 1]
+        y := pop(stack)
+        x := pop(stack)
+        v := pop(stack)
         if x < 80 && x >= 0 && y < 25 && y >= 0 {
           codeGrid[y][x] = rune(v)
         }
@@ -577,35 +567,35 @@ func ExecuteBefunge93(code string, input string) string {
         // TODO
       case '~':
         if index < len(input) {
-          stack = append(stack, int(input[index]))
+          push(stack, int(input[index]))
           index++
         }
       case '@':
         running = false
       case '0':
-         stack = append(stack, 0)
+         push(stack, 0)
       case '1':
-         stack = append(stack, 1)
+         push(stack, 1)
       case '2':
-         stack = append(stack, 2)
+         push(stack, 2)
       case '3':
-         stack = append(stack, 3)
+         push(stack, 3)
       case '4':
-         stack = append(stack, 4)
+         push(stack, 4)
       case '5':
-         stack = append(stack, 5)
+         push(stack, 5)
       case '6':
-         stack = append(stack, 6)
+         push(stack, 6)
       case '7':
-         stack = append(stack, 7)
+         push(stack, 7)
       case '8':
-         stack = append(stack, 8)
+         push(stack, 8)
       case '9':
-        stack = append(stack, 9)
+        push(stack, 9)
     }
     
-    x += dx
-    y += dy
+    x = (x + dx) % 80
+    y = (y + dy) % 25
   }
 
   return output
