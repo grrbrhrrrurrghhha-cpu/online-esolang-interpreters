@@ -460,9 +460,17 @@ func ExecuteBefunge93(code string, input string) string {
       case '/':
         b := pop(&stack)
         a := pop(&stack)
-        if a != 0 {
-          push(&stack, b / a)
+        if a == 0 {
+          for index < len(input) && input[index] == ' ' && input[index] == '\n' && input[index] == '\r' {
+            index++
+          }
+          for index < len(input) && input[index] >= '0' && input[index] <= '9' {
+            a *= 10
+            a += int(input[index] - '0')
+            index++
+          }
         }
+        push(&stack, b / a)
       case '%':
         b := pop(&stack)
         a := pop(&stack)
@@ -564,7 +572,15 @@ func ExecuteBefunge93(code string, input string) string {
           codeGrid[y][x] = rune(v)
         }
       case '&':
-        // TODO
+        n := 0
+        for index < len(input) && input[index] == ' ' && input[index] == '\n' && input[index] == '\r' {
+          index++
+        }
+        for index < len(input) && input[index] >= '0' && input[index] <= '9' {
+          n *= 10
+          n += int(input[index] - '0')
+          index++
+        }
       case '~':
         if index < len(input) {
           push(&stack, int(input[index]))
