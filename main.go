@@ -447,8 +447,8 @@ func ExecuteBefunge93(code string, input string) string {
     
     if stringMode && codeGrid[y][x] != '"' {
       push(&stack, int(codeGrid[y][x]))
-      x = (x + dx) % width
-      y = (y + dy) % height
+      x = mod(x + dx, width)
+      y = mod(y + dy, height)
       continue
     }
     
@@ -562,8 +562,8 @@ func ExecuteBefunge93(code string, input string) string {
         a := pop(&stack)
         output += string(a)
       case '#':
-        x = (x + dx) % width
-        y = (y + dy) % height
+        x = mod(x + dx, width)
+        y = mod(y + dy, height)
       case 'g':
         y := pop(&stack)
         x := pop(&stack)
@@ -618,8 +618,8 @@ func ExecuteBefunge93(code string, input string) string {
         push(&stack, 9)
     }
     
-    x = (x + dx) % width
-    y = (y + dy) % height
+    x = mod(x + dx, width)
+    y = mod(y + dy, height)
   }
 
   return output
