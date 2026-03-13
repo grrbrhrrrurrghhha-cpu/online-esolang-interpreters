@@ -401,7 +401,7 @@ func Execute67machine(code string) string {
 
 func ExecuteBefunge93(code string, input string) string {
   var output string
-  var index, x, y, dx, dy, ops int
+  var index, x, y, dx, dy, width, height, ops int
   var stringMode bool
   running := true
   codeGrid := [25][80]rune{}
@@ -412,11 +412,17 @@ func ExecuteBefunge93(code string, input string) string {
     if c != '\n' {
       codeGrid[y][x] = c
       x++
+      if x > width {
+        width = x
+      }
       if x >= 80 {
         return "Out of bounds\n"
       }
     } else {
       y++
+      if y > height {
+        height = y
+      }
       x = 0
       if y >= 25 {
         return "Out of bounds\n"
@@ -439,8 +445,8 @@ func ExecuteBefunge93(code string, input string) string {
     
     if stringMode && codeGrid[y][x] != '"' {
       push(&stack, int(codeGrid[y][x]))
-      x = (x + dx) % 80
-      y = (y + dy) % 25
+      x = (x + dx) % width
+      y = (y + dy) % height
       continue
     }
     
@@ -554,8 +560,8 @@ func ExecuteBefunge93(code string, input string) string {
         a := pop(&stack)
         output += string(a)
       case '#':
-        x = (x + dx) % 80
-        y = (y + dy) % 25
+        x = (x + dx) % width
+        y = (y + dy) % height
       case 'g':
         y := pop(&stack)
         x := pop(&stack)
@@ -610,8 +616,8 @@ func ExecuteBefunge93(code string, input string) string {
         push(&stack, 9)
     }
     
-    x = (x + dx) % 80
-    y = (y + dy) % 25
+    x = (x + dx) % width
+    y = (y + dy) % height
   }
 
   return output
