@@ -387,7 +387,7 @@ func Execute67machine(code string) string {
       if codeArray[mod(ip + 1, len(codeArray))] == '6' {
         codeArray[mod(ip + 1, len(codeArray))] = '7'
       } else {
-        codeArray[mod(ip + 1, len(codeArray))] = '7'
+        codeArray[mod(ip + 1, len(codeArray))] = '6'
       }
       ip = mod(ip + 7, len(codeArray))
     case '7':
