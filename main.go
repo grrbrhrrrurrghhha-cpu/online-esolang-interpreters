@@ -475,6 +475,7 @@ func ExecuteBefunge93(code string, input string) string {
           }
           if index < len(input) && input[index] == '-' {
             negative = true
+            index++
           }
           for index < len(input) && (input[index] >= '0' && input[index] <= '9') {
             a *= 10
@@ -594,6 +595,7 @@ func ExecuteBefunge93(code string, input string) string {
         }
         if index < len(input) && input[index] == '-' {
           negative = true
+          index++
         }
         for index < len(input) && (input[index] >= '0' && input[index] <= '9') {
           n *= 10
