@@ -334,7 +334,7 @@ func ExecuteRPN(code string, input string) string {
     stack = append(stack, num)
   }
   if len(stack) > 0 {
-    output = strconv.Itoa(stack[0])
+    output = strconv.Itoa(stack[len(stack) - 1])
   }
   return output
 }
