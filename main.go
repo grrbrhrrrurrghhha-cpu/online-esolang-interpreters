@@ -646,7 +646,7 @@ func main() {
     case "percentcaretand78":
       output = ExecutePercentCaretAnd78(code)
     case "befunge93":
-      output = ExecuteBefunge93(code)
+      output = ExecuteBefunge93(code, input)
     default:
       output = "Unknown esolang: " + lang
     }
