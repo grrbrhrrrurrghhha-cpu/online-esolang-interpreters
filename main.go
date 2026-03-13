@@ -400,12 +400,12 @@ func ExecuteBefunge93(code string, input string) string {
       x++
       if x >= 80 {
         return "Out of bounds\n"
-      } else {
-        y++
-        x = 0
-        if y >= 25 {
-          return "Out of bounds\n"
-        }
+      }
+    } else {
+      y++
+      x = 0
+      if y >= 25 {
+        return "Out of bounds\n"
       }
     }
   }
