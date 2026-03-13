@@ -13,11 +13,11 @@ func mod(a int, b int) int {
   return ((a % b) + b) % b
 }
 
-func push(stack []int, a int) {
+func push(stack *[]int, a int) {
   stack = append(stack, a)
 }
 
-func pop(stack []int) int {
+func pop(stack *[]int) int {
   if len(stack) > 0 {
     top := stack[len(stack) - 1]
     stack = stack[:len(stack) - 1]
@@ -438,7 +438,7 @@ func ExecuteBefunge93(code string, input string) string {
     }
     
     if stringMode && codeGrid[y][x] != '"' {
-      stack = append(stack, int(codeGrid[y][x]))
+      push(&stack, int(codeGrid[y][x]))
       x = (x + dx) % 80
       y = (y + dy) % 25
       continue
@@ -446,41 +446,41 @@ func ExecuteBefunge93(code string, input string) string {
     
     switch codeGrid[y][x] {
       case '+':
-        b := pop(stack)
-        a := pop(stack)
-        push(stack, a + b)
+        b := pop(&stack)
+        a := pop(&stack)
+        push(&stack, a + b)
       case '-':
-        b := pop(stack)
-        a := pop(stack)
-        push(stack, b - a)
+        b := pop(&stack)
+        a := pop(&stack)
+        push(&stack, b - a)
       case '*':
-        b := pop(stack)
-        a := pop(stack)
-        push(stack, a * b)
+        b := pop(&stack)
+        a := pop(&stack)
+        push(&stack, a * b)
       case '/':
-        b := pop(stack)
-        a := pop(stack)
+        b := pop(&stack)
+        a := pop(&stack)
         if a != 0 {
-          push(stack, b / a)
+          push(&stack, b / a)
         }
       case '%':
-        b := pop(stack)
-        a := pop(stack)
-        push(stack, b % a)
+        b := pop(&stack)
+        a := pop(&stack)
+        push(&stack, b % a)
       case '!':
-        a := pop(stack)
+        a := pop(&stack)
         if a == 0 {
-          push(stack, 1)
+          push(&stack, 1)
         } else {
-          push(stack, 0)
+          push(&stack, 0)
         }
       case '`':
-        b := pop(stack)
-        a := pop(stack)
+        b := pop(&stack)
+        a := pop(&stack)
         if b > a {
-          push(stack, 1)
+          push(&stack, 1)
         } else {
-          push(stack, 0)
+          push(&stack, 0)
         }
       case '>':
         dx = 1
@@ -511,7 +511,7 @@ func ExecuteBefunge93(code string, input string) string {
             dx = 0
         }
       case '_':
-        a := pop(stack)
+        a := pop(&stack)
         if a == 0 {
           dx = 1
         } else {
@@ -519,7 +519,7 @@ func ExecuteBefunge93(code string, input string) string {
         }
         dy = 0
       case '|':
-        a := pop(stack)
+        a := pop(&stack)
         if a == 0 {
           dy = 1
         } else {
@@ -529,37 +529,37 @@ func ExecuteBefunge93(code string, input string) string {
       case '"':
         stringMode = !stringMode
       case ':':
-        a := pop(stack)
-        push(stack, a)
-        push(stack, a)
+        a := pop(&stack)
+        push(&stack, a)
+        push(&stack, a)
       case '\\':
-        a := pop(stack)
-        b := pop(stack)
-        push(stack, a)
-        push(stack, b)
+        a := pop(&stack)
+        b := pop(&stack)
+        push(&stack, a)
+        push(&stack, b)
       case '$':
-        pop(stack)
+        pop(&stack)
       case '.':
-        a := pop(stack)
-        output += strconv.Itoa(a)
+        a := pop(&stack)
+        output += strconv.Itoa(a) + " "
       case ',':
-        a := pop(stack)
-        output += string(a) + " "
+        a := pop(&stack)
+        output += string(a)
       case '#':
         x = (x + dx) % 80
         y = (y + dy) % 25
       case 'g':
-        y := pop(stack)
-        x := pop(stack)
+        y := pop(&stack)
+        x := pop(&stack)
         if x < 80 && x >= 0 && y < 25 && y >= 0 {
-          push(stack, int(codeGrid[y][x]))
+          push(&stack, int(codeGrid[y][x]))
         } else {
-          push(stack, 0)
+          push(&stack, 0)
         }
       case 'p':
-        y := pop(stack)
-        x := pop(stack)
-        v := pop(stack)
+        y := pop(&stack)
+        x := pop(&stack)
+        v := pop(&stack)
         if x < 80 && x >= 0 && y < 25 && y >= 0 {
           codeGrid[y][x] = rune(v)
         }
@@ -567,31 +567,31 @@ func ExecuteBefunge93(code string, input string) string {
         // TODO
       case '~':
         if index < len(input) {
-          push(stack, int(input[index]))
+          push(&stack, int(input[index]))
           index++
         }
       case '@':
         running = false
       case '0':
-         push(stack, 0)
+         push(&stack, 0)
       case '1':
-         push(stack, 1)
+         push(&stack, 1)
       case '2':
-         push(stack, 2)
+         push(&stack, 2)
       case '3':
-         push(stack, 3)
+         push(&stack, 3)
       case '4':
-         push(stack, 4)
+         push(&stack, 4)
       case '5':
-         push(stack, 5)
+         push(&stack, 5)
       case '6':
-         push(stack, 6)
+         push(&stack, 6)
       case '7':
-         push(stack, 7)
+         push(&stack, 7)
       case '8':
-         push(stack, 8)
+         push(&stack, 8)
       case '9':
-        push(stack, 9)
+        push(&stack, 9)
     }
     
     x = (x + dx) % 80
