@@ -422,8 +422,8 @@ func ExecuteBefunge93(code string, input string) string {
       }
     } else {
       y++
-      if y > height {
-        height = y
+      if y + 1 > height {
+        height = y + 1
       }
       x = 0
       if y >= 25 {
