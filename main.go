@@ -14,13 +14,13 @@ func mod(a int, b int) int {
 }
 
 func push(stack *[]int, a int) {
-  stack = append(stack, a)
+  stack = append(*stack, a)
 }
 
 func pop(stack *[]int) int {
-  if len(stack) > 0 {
-    top := stack[len(stack) - 1]
-    stack = stack[:len(stack) - 1]
+  if len(*stack) > 0 {
+    top := stack[len(*stack) - 1]
+    stack = stack[:len(*stack) - 1]
     return top
   } else {
     return 0
