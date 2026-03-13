@@ -401,8 +401,10 @@ func Execute67machine(code string) string {
 
 func ExecuteBefunge93(code string, input string) string {
   var output string
-  var index, x, y, dx, dy, width, height, ops int
+  var index, x, y, dx, dy, ops int
   var stringMode bool
+  width := 1
+  height := 1
   running := true
   codeGrid := [25][80]rune{}
   stack := []int{}
