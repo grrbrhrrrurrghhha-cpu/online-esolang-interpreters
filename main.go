@@ -14,7 +14,7 @@ func mod(a int, b int) int {
 }
 
 func push(stack *[]int, a int) {
-  stack = append(*stack, a)
+  *stack = append(*stack, a)
 }
 
 func pop(stack *[]int) int {
