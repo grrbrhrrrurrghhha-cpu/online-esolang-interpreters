@@ -469,13 +469,20 @@ func ExecuteBefunge93(code string, input string) string {
         a := pop(&stack)
         b := pop(&stack)
         if a == 0 {
+          var negative bool
           for index < len(input) && (input[index] == ' ' || input[index] == '\n' || input[index] == '\r') {
             index++
+          }
+          if index < len(input) && input[index] == '-' {
+            negative = true
           }
           for index < len(input) && (input[index] >= '0' && input[index] <= '9') {
             a *= 10
             a += int(input[index] - '0')
             index++
+          }
+          if negative {
+            a = -a
           }
         }
         push(&stack, b / a)
@@ -580,14 +587,21 @@ func ExecuteBefunge93(code string, input string) string {
           codeGrid[y][x] = rune(v)
         }
       case '&':
+        var negative bool
         n := 0
         for index < len(input) && (input[index] == ' ' || input[index] == '\n' || input[index] == '\r') {
           index++
+        }
+        if index < len(input) && input[index] == '-' {
+          negative = true
         }
         for index < len(input) && (input[index] >= '0' && input[index] <= '9') {
           n *= 10
           n += int(input[index] - '0')
           index++
+        }
+        if negative {
+          n = -n
         }
         push(&stack, n)
       case '~':
