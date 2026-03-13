@@ -425,6 +425,8 @@ func ExecuteBefunge93(code string, input string) string {
     
     if stringMode && codeGrid[y][x] != '"' {
       stack = append(stack, int(codeGrid[y][x]))
+      x += dx
+      y += dy
       continue
     }
     
@@ -547,7 +549,7 @@ func ExecuteBefunge93(code string, input string) string {
       case ',':
         a := stack[len(stack) - 1]
         stack = stack[:len(stack) - 1]
-        output += string(a)
+        output += string(a) + " "
       case '#':
         x += dx
         y += dy
@@ -555,6 +557,7 @@ func ExecuteBefunge93(code string, input string) string {
         y := stack[len(stack) - 1]
         stack = stack[:len(stack) - 1]
         x := stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
         if x < 80 && x >= 0 && y < 25 && y >= 0 {
           stack = append(stack, int(codeGrid[y][x]))
         } else {
