@@ -391,7 +391,7 @@ func Execute67machine(code string) string {
       }
       ip = mod(ip + 7, len(codeArray))
     case '7':
-      codeArray = append(codeArray, codeArray[mod(ip + 1, len(codeArray))])
+      codeArray = append(codeArray, codeArray[mod(ip - 1, len(codeArray))])
       ip = mod(ip - 6, len(codeArray))
     }
   }
