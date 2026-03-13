@@ -543,7 +543,7 @@ func ExecuteBefunge93(code string, input string) string {
       case '.':
         a := stack[len(stack) - 1]
         stack = stack[:len(stack) - 1]
-        output += strconv.Atoi(a)
+        output += strconv.Itoa(a)
       case ',':
         a := stack[len(stack) - 1]
         stack = stack[:len(stack) - 1]
