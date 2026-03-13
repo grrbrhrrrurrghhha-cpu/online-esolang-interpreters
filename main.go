@@ -423,8 +423,8 @@ func ExecuteBefunge93(code string, input string) string {
       }
     }
     
-    if stringMode && c != '"' {
-      stack = append(stack, int(c))
+    if stringMode && codeGrid[y][x] != '"' {
+      stack = append(stack, int(codeGrid[y][x]))
       continue
     }
     
