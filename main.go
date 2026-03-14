@@ -403,8 +403,6 @@ func ExecuteBefunge93(code string, input string) string {
   var output string
   var index, x, y, dx, dy, ops int
   var stringMode bool
-  width := 1
-  height := 1
   running := true
   codeGrid := [25][80]rune{}
   stack := []int{}
@@ -414,17 +412,11 @@ func ExecuteBefunge93(code string, input string) string {
     if c != '\n' {
       codeGrid[y][x] = c
       x++
-      if x > width {
-        width = x
-      }
       if x >= 80 {
         return "Out of bounds\n"
       }
     } else {
       y++
-      if y + 1 > height {
-        height = y + 1
-      }
       x = 0
       if y >= 25 {
         return "Out of bounds\n"
@@ -447,8 +439,8 @@ func ExecuteBefunge93(code string, input string) string {
     
     if stringMode && codeGrid[y][x] != '"' {
       push(&stack, int(codeGrid[y][x]))
-      x = mod(x + dx, width)
-      y = mod(y + dy, height)
+      x = mod(x + dx, 80)
+      y = mod(y + dy, 25)
       continue
     }
     
@@ -570,8 +562,8 @@ func ExecuteBefunge93(code string, input string) string {
         a := pop(&stack)
         output += string(a)
       case '#':
-        x = mod(x + dx, width)
-        y = mod(y + dy, height)
+        x = mod(x + dx, 80)
+        y = mod(y + dy, 25)
       case 'g':
         y := pop(&stack)
         x := pop(&stack)
@@ -635,8 +627,8 @@ func ExecuteBefunge93(code string, input string) string {
         push(&stack, 9)
     }
     
-    x = mod(x + dx, width)
-    y = mod(y + dy, height)
+    x = mod(x + dx, 80)
+    y = mod(y + dy, 25)
   }
 
   return output
