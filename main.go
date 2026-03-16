@@ -410,17 +410,17 @@ func ExecuteBefunge93(code string, input string) string {
   
   for _, c := range code {
     if c != '\n' {
-      codeGrid[y][x] = c
-      x++
       if x >= 80 {
         return "Out of bounds\n"
       }
+      codeGrid[y][x] = c
+      x++
     } else {
-      y++
-      x = 0
       if y >= 25 {
         return "Out of bounds\n"
       }
+      y++
+      x = 0
     }
   }
   x = 0
